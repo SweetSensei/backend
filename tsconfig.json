@@ -5,7 +5,7 @@
     "lib": ["es2020"],
     "allowJs": true,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
