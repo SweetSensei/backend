@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import express, { RequestHandler } from 'express';
 import { createUser } from '../controllers/userController';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/', createUser);
+router.post('/', createUser as RequestHandler);
 
 export default router; 

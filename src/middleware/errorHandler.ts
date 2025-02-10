@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import logger from '../config/logger';
 
 export const errorHandler = (
   err: Error,
@@ -6,10 +7,15 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error(err.stack);
+  logger.error('Error:', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+  });
+
   res.status(500).json({
     success: false,
     message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined,
   });
 }; 
