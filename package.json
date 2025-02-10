@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc && cp package.json dist/",
     "lint": "eslint . --ext .ts",
-    "test": "jest"
+    "test": "jest",
+    "vercel-deploy": "echo hello"
   },
   "keywords": [],
   "author": "",
