@@ -1,18 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ES2020",
     "module": "commonjs",
-    "lib": ["es2020"],
-    "allowJs": true,
-    "outDir": "dist",
-    "rootDir": ".",
+    "lib": ["ES2020"],
+    "baseUrl": "./",
+    "paths": {
+      "@functions/*": ["src/functions/users/*"],
+      "@libs/*": ["src/libs/*"]
+    },
+    "moduleResolution": "node",
+    "outDir": ".build",
+    "rootDir": "./",
     "strict": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "sourceMap": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*", "api/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules/**/*", ".serverless/**/*", ".webpack/**/*", "_warmup/**/*", ".vscode/**/*"]
 } 
