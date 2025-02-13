@@ -1,5 +1,16 @@
 import * as Joi from 'joi';
 
+export const addAddressSchema = Joi.object({
+  name: Joi.string().required().trim(),
+  street: Joi.string().required().trim(),
+  city: Joi.string().required().trim(),
+  state: Joi.string().required().trim(),
+  country: Joi.string().required().trim(),
+  zipCode: Joi.string().required().trim(),
+  phone: Joi.string().required().trim(),
+  isDefault: Joi.boolean().default(false),
+});
+
 export const signupSchema = Joi.object({
     email: Joi.string()
       .email()
@@ -12,14 +23,7 @@ export const signupSchema = Joi.object({
       .trim()
   });
 
-    // return {
-  //   statusCode: 200,
-  //   body: JSON.stringify(
-  //     {
-  //       message: "Go Serverless v1.0! Your function executed successfully!",
-  //       input: event,
-  //     },
-  //     null,
-  //     2,
-  //   ),
-  // };
+export const loginSchema = Joi.object({
+  email: Joi.string().required().email().trim().lowercase(),
+  password: Joi.string().required(),
+});

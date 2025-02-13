@@ -9,6 +9,10 @@ provider:
   region: ${opt:region, 'us-east-1'}
   environment:
     NODE_ENV: ${self:provider.stage}
+    STRIPE_SECRET_KEY: ${env:STRIPE_SECRET_KEY}
+    CLIENT_URL: ${env:CLIENT_URL}
+  httpApi:
+    cors: true
   
   iam:
     role:
@@ -23,6 +27,13 @@ provider:
             - dynamodb:DeleteItem
           Resource: 
             - !GetAtt UsersTable.Arn
+            - !GetAtt ProductsTable.Arn
+            - !GetAtt OrdersTable.Arn
+            - !Join
+              - '/'
+              - - !GetAtt UsersTable.Arn
+                - 'index'
+                - 'EmailIndex'
 
 custom:
   esbuild:
@@ -48,12 +59,107 @@ package:
 
 functions:
   signup:
-    handler: src/functions/users/handler.signup
+    handler: src/functions/users.signup
     events:
       - http:
           path: /users
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
+  login:
+    handler: src/functions/users.login
+    events:
+      - http:
+          path: /users/login
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
+  addProduct:
+    handler: src/functions/products.addProduct
+    events:
+      - http:
+          path: /products
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
+  getProducts:
+    handler: src/functions/products.getProducts
+    events:
+      - http:
+          path: /products
+          method: get
+  getProduct:
+    handler: src/functions/products.getProduct
+    events:
+      - http:
+          path: /products/{id}
+          method: get
+  createCheckoutSession:
+    handler: src/functions/checkout.createSession
+    events:
+      - http:
+          path: /checkout/create-session
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
+  addAddress:
+    handler: src/functions/users.addAddress
+    events:
+      - http:
+          path: /users/addresses
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
+  getAddress:
+    handler: src/functions/users.getAddress
+    events:
+      - http:
+          path: /users/addresses
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - GET
+              - OPTIONS
+            allowCredentials: false
 
 resources:
   Resources:
@@ -76,4 +182,26 @@ resources:
               - AttributeName: email
                 KeyType: HASH
             Projection:
-              ProjectionType: ALL 
+              ProjectionType: ALL
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}-products
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    OrdersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}-orders
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH 

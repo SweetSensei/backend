@@ -14,6 +14,9 @@
         "environment": {
           "NODE_ENV": "dev"
         },
+        "httpApi": {
+          "cors": true
+        },
         "iam": {
           "role": {
             "statements": [
@@ -33,6 +36,27 @@
                       "UsersTable",
                       "Arn"
                     ]
+                  },
+                  {
+                    "Fn::GetAtt": [
+                      "ProductsTable",
+                      "Arn"
+                    ]
+                  },
+                  {
+                    "Fn::Join": [
+                      "/",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "UsersTable",
+                            "Arn"
+                          ]
+                        },
+                        "index",
+                        "EmailIndex"
+                      ]
+                    ]
                   }
                 ]
               }
@@ -48,6 +72,30 @@
               "Type": "AWS::Logs::LogGroup",
               "Properties": {
                 "LogGroupName": "/aws/lambda/sweet-sensei-dev-signup"
+              }
+            },
+            "LoginLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/sweet-sensei-dev-login"
+              }
+            },
+            "AddProductLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/sweet-sensei-dev-addProduct"
+              }
+            },
+            "GetProductsLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/sweet-sensei-dev-getProducts"
+              }
+            },
+            "GetProductLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/sweet-sensei-dev-getProduct"
               }
             },
             "IamRoleLambdaExecution": {
@@ -124,6 +172,27 @@
                                 "UsersTable",
                                 "Arn"
                               ]
+                            },
+                            {
+                              "Fn::GetAtt": [
+                                "ProductsTable",
+                                "Arn"
+                              ]
+                            },
+                            {
+                              "Fn::Join": [
+                                "/",
+                                [
+                                  {
+                                    "Fn::GetAtt": [
+                                      "UsersTable",
+                                      "Arn"
+                                    ]
+                                  },
+                                  "index",
+                                  "EmailIndex"
+                                ]
+                              ]
                             }
                           ]
                         }
@@ -152,9 +221,9 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-                  "S3Key": "serverless/sweet-sensei/dev/1739262484540-2025-02-11T08:28:04.540Z/sweet-sensei-signup.zip"
+                  "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-signup.zip"
                 },
-                "Handler": "src/functions/users/handler.signup",
+                "Handler": "src/functions/users.signup",
                 "Runtime": "nodejs18.x",
                 "FunctionName": "sweet-sensei-dev-signup",
                 "MemorySize": 1024,
@@ -176,14 +245,170 @@
                 "SignupLogGroup"
               ]
             },
-            "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw": {
+            "LoginLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                  "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-login.zip"
+                },
+                "Handler": "src/functions/users.login",
+                "Runtime": "nodejs18.x",
+                "FunctionName": "sweet-sensei-dev-login",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "NODE_ENV": "dev",
+                    "NODE_OPTIONS": "--enable-source-maps"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "LoginLogGroup"
+              ]
+            },
+            "AddProductLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                  "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-addProduct.zip"
+                },
+                "Handler": "src/functions/products.addProduct",
+                "Runtime": "nodejs18.x",
+                "FunctionName": "sweet-sensei-dev-addProduct",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "NODE_ENV": "dev",
+                    "NODE_OPTIONS": "--enable-source-maps"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "AddProductLogGroup"
+              ]
+            },
+            "GetProductsLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                  "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-getProducts.zip"
+                },
+                "Handler": "src/functions/products.getProducts",
+                "Runtime": "nodejs18.x",
+                "FunctionName": "sweet-sensei-dev-getProducts",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "NODE_ENV": "dev",
+                    "NODE_OPTIONS": "--enable-source-maps"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "GetProductsLogGroup"
+              ]
+            },
+            "GetProductLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                  "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-getProduct.zip"
+                },
+                "Handler": "src/functions/products.getProduct",
+                "Runtime": "nodejs18.x",
+                "FunctionName": "sweet-sensei-dev-getProduct",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "NODE_ENV": "dev",
+                    "NODE_OPTIONS": "--enable-source-maps"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "GetProductLogGroup"
+              ]
+            },
+            "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "GetProductsLambdaFunction"
+                },
+                "CodeSha256": "M2bnXIyYLsnLBixyA+M/k4PL56bZcKxdzhyXsN0PldQ="
+              }
+            },
+            "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "SignupLambdaFunction"
                 },
-                "CodeSha256": "Rl+FB2Tma8iqcdETpWUd8xC+7g3kjfgVhnKHqWTijXU="
+                "CodeSha256": "tCpySWE5xogkywGAmfMADgu5FzFc169nN3x5Ixg7y20="
+              }
+            },
+            "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "AddProductLambdaFunction"
+                },
+                "CodeSha256": "yTitNkDaYhEGWZX1yrRPNhXoBXsC6N9+awYhYnHiKGw="
+              }
+            },
+            "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "GetProductLambdaFunction"
+                },
+                "CodeSha256": "o1upIdYL7EhSG3F9Wr+G1TDZzsQsAROWdcVq/+yyJF0="
+              }
+            },
+            "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "LoginLambdaFunction"
+                },
+                "CodeSha256": "tCpySWE5xogkywGAmfMADgu5FzFc169nN3x5Ixg7y20="
               }
             },
             "ApiGatewayRestApi": {
@@ -208,6 +433,45 @@
                   ]
                 },
                 "PathPart": "users",
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                }
+              }
+            },
+            "ApiGatewayResourceUsersLogin": {
+              "Type": "AWS::ApiGateway::Resource",
+              "Properties": {
+                "ParentId": {
+                  "Ref": "ApiGatewayResourceUsers"
+                },
+                "PathPart": "login",
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                }
+              }
+            },
+            "ApiGatewayResourceProducts": {
+              "Type": "AWS::ApiGateway::Resource",
+              "Properties": {
+                "ParentId": {
+                  "Fn::GetAtt": [
+                    "ApiGatewayRestApi",
+                    "RootResourceId"
+                  ]
+                },
+                "PathPart": "products",
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                }
+              }
+            },
+            "ApiGatewayResourceProductsIdVar": {
+              "Type": "AWS::ApiGateway::Resource",
+              "Properties": {
+                "ParentId": {
+                  "Ref": "ApiGatewayResourceProducts"
+                },
+                "PathPart": "{id}",
                 "RestApiId": {
                   "Ref": "ApiGatewayRestApi"
                 }
@@ -241,8 +505,8 @@
                       "StatusCode": "200",
                       "ResponseParameters": {
                         "method.response.header.Access-Control-Allow-Origin": "'*'",
-                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
                       },
                       "ResponseTemplates": {
                         "application/json": ""
@@ -252,6 +516,96 @@
                 },
                 "ResourceId": {
                   "Ref": "ApiGatewayResourceUsers"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                }
+              }
+            },
+            "ApiGatewayMethodUsersLoginOptions": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "OPTIONS",
+                "MethodResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": true,
+                      "method.response.header.Access-Control-Allow-Headers": true,
+                      "method.response.header.Access-Control-Allow-Methods": true
+                    },
+                    "ResponseModels": {}
+                  }
+                ],
+                "RequestParameters": {},
+                "Integration": {
+                  "Type": "MOCK",
+                  "RequestTemplates": {
+                    "application/json": "{statusCode:200}"
+                  },
+                  "ContentHandling": "CONVERT_TO_TEXT",
+                  "IntegrationResponses": [
+                    {
+                      "StatusCode": "200",
+                      "ResponseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+                      },
+                      "ResponseTemplates": {
+                        "application/json": ""
+                      }
+                    }
+                  ]
+                },
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceUsersLogin"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                }
+              }
+            },
+            "ApiGatewayMethodProductsOptions": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "OPTIONS",
+                "MethodResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": true,
+                      "method.response.header.Access-Control-Allow-Headers": true,
+                      "method.response.header.Access-Control-Allow-Methods": true
+                    },
+                    "ResponseModels": {}
+                  }
+                ],
+                "RequestParameters": {},
+                "Integration": {
+                  "Type": "MOCK",
+                  "RequestTemplates": {
+                    "application/json": "{statusCode:200}"
+                  },
+                  "ContentHandling": "CONVERT_TO_TEXT",
+                  "IntegrationResponses": [
+                    {
+                      "StatusCode": "200",
+                      "ResponseParameters": {
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+                      },
+                      "ResponseTemplates": {
+                        "application/json": ""
+                      }
+                    }
+                  ]
+                },
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceProducts"
                 },
                 "RestApiId": {
                   "Ref": "ApiGatewayRestApi"
@@ -304,7 +658,191 @@
                 "SignupLambdaPermissionApiGateway"
               ]
             },
-            "ApiGatewayDeployment1739262479335": {
+            "ApiGatewayMethodUsersLoginPost": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "HttpMethod": "POST",
+                "RequestParameters": {},
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceUsersLogin"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "ApiKeyRequired": "<REDACTED>",
+                "AuthorizationType": "NONE",
+                "Integration": {
+                  "IntegrationHttpMethod": "POST",
+                  "Type": "AWS_PROXY",
+                  "Uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+                        {
+                          "Fn::GetAtt": [
+                            "LoginLambdaFunction",
+                            "Arn"
+                          ]
+                        },
+                        "/invocations"
+                      ]
+                    ]
+                  }
+                },
+                "MethodResponses": []
+              },
+              "DependsOn": [
+                "LoginLambdaPermissionApiGateway"
+              ]
+            },
+            "ApiGatewayMethodProductsPost": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "HttpMethod": "POST",
+                "RequestParameters": {},
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceProducts"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "ApiKeyRequired": "<REDACTED>",
+                "AuthorizationType": "NONE",
+                "Integration": {
+                  "IntegrationHttpMethod": "POST",
+                  "Type": "AWS_PROXY",
+                  "Uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+                        {
+                          "Fn::GetAtt": [
+                            "AddProductLambdaFunction",
+                            "Arn"
+                          ]
+                        },
+                        "/invocations"
+                      ]
+                    ]
+                  }
+                },
+                "MethodResponses": []
+              },
+              "DependsOn": [
+                "AddProductLambdaPermissionApiGateway"
+              ]
+            },
+            "ApiGatewayMethodProductsGet": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "HttpMethod": "GET",
+                "RequestParameters": {},
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceProducts"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "ApiKeyRequired": "<REDACTED>",
+                "AuthorizationType": "NONE",
+                "Integration": {
+                  "IntegrationHttpMethod": "POST",
+                  "Type": "AWS_PROXY",
+                  "Uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+                        {
+                          "Fn::GetAtt": [
+                            "GetProductsLambdaFunction",
+                            "Arn"
+                          ]
+                        },
+                        "/invocations"
+                      ]
+                    ]
+                  }
+                },
+                "MethodResponses": []
+              },
+              "DependsOn": [
+                "GetProductsLambdaPermissionApiGateway"
+              ]
+            },
+            "ApiGatewayMethodProductsIdVarGet": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "HttpMethod": "GET",
+                "RequestParameters": {},
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceProductsIdVar"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "ApiKeyRequired": "<REDACTED>",
+                "AuthorizationType": "NONE",
+                "Integration": {
+                  "IntegrationHttpMethod": "POST",
+                  "Type": "AWS_PROXY",
+                  "Uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+                        {
+                          "Fn::GetAtt": [
+                            "GetProductLambdaFunction",
+                            "Arn"
+                          ]
+                        },
+                        "/invocations"
+                      ]
+                    ]
+                  }
+                },
+                "MethodResponses": []
+              },
+              "DependsOn": [
+                "GetProductLambdaPermissionApiGateway"
+              ]
+            },
+            "ApiGatewayDeployment1739345463718": {
               "Type": "AWS::ApiGateway::Deployment",
               "Properties": {
                 "RestApiId": {
@@ -314,7 +852,13 @@
               },
               "DependsOn": [
                 "ApiGatewayMethodUsersOptions",
-                "ApiGatewayMethodUsersPost"
+                "ApiGatewayMethodUsersLoginOptions",
+                "ApiGatewayMethodProductsOptions",
+                "ApiGatewayMethodUsersPost",
+                "ApiGatewayMethodUsersLoginPost",
+                "ApiGatewayMethodProductsPost",
+                "ApiGatewayMethodProductsGet",
+                "ApiGatewayMethodProductsIdVarGet"
               ]
             },
             "SignupLambdaPermissionApiGateway": {
@@ -323,6 +867,154 @@
                 "FunctionName": {
                   "Fn::GetAtt": [
                     "SignupLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "LoginLambdaPermissionApiGateway": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "LoginLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "AddProductLambdaPermissionApiGateway": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "AddProductLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "GetProductsLambdaPermissionApiGateway": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "GetProductsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "GetProductLambdaPermissionApiGateway": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "GetProductLambdaFunction",
                     "Arn"
                   ]
                 },
@@ -390,6 +1082,25 @@
                   }
                 ]
               }
+            },
+            "ProductsTable": {
+              "Type": "AWS::DynamoDB::Table",
+              "Properties": {
+                "TableName": "dev-products",
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [
+                  {
+                    "AttributeName": "id",
+                    "AttributeType": "S"
+                  }
+                ],
+                "KeySchema": [
+                  {
+                    "AttributeName": "id",
+                    "KeyType": "HASH"
+                  }
+                ]
+              }
             }
           },
           "Outputs": {
@@ -399,13 +1110,49 @@
                 "Name": "sls-sweet-sensei-dev-ServerlessDeploymentBucketName"
               }
             },
+            "GetProductsLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg"
+              },
+              "Export": {
+                "Name": "sls-sweet-sensei-dev-GetProductsLambdaFunctionQualifiedArn"
+              }
+            },
             "SignupLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw"
+                "Ref": "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM"
               },
               "Export": {
                 "Name": "sls-sweet-sensei-dev-SignupLambdaFunctionQualifiedArn"
+              }
+            },
+            "AddProductLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs"
+              },
+              "Export": {
+                "Name": "sls-sweet-sensei-dev-AddProductLambdaFunctionQualifiedArn"
+              }
+            },
+            "GetProductLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E"
+              },
+              "Export": {
+                "Name": "sls-sweet-sensei-dev-GetProductLambdaFunctionQualifiedArn"
+              }
+            },
+            "LoginLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q"
+              },
+              "Export": {
+                "Name": "sls-sweet-sensei-dev-LoginLambdaFunctionQualifiedArn"
               }
             },
             "ServiceEndpoint": {
@@ -466,11 +1213,11 @@
         ],
         "artifactsS3KeyDirname": "serverless/sweet-sensei/dev/code-artifacts",
         "deploymentBucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-        "artifactDirectoryName": "serverless/sweet-sensei/dev/1739262484540-2025-02-11T08:28:04.540Z"
+        "artifactDirectoryName": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z"
       },
       "functions": {
         "signup": {
-          "handler": "src/functions/users/handler.signup",
+          "handler": "src/functions/users.signup",
           "events": [
             {
               "http": {
@@ -479,17 +1226,12 @@
                 "cors": {
                   "origin": "*",
                   "methods": [
-                    "OPTIONS",
-                    "POST"
+                    "POST",
+                    "OPTIONS"
                   ],
                   "headers": [
                     "Content-Type",
-                    "X-Amz-Date",
-                    "Authorization",
-                    "X-Api-Key",
-                    "X-Amz-Security-Token",
-                    "X-Amz-User-Agent",
-                    "X-Amzn-Trace-Id"
+                    "Authorization"
                   ],
                   "allowCredentials": "<REDACTED>"
                 },
@@ -508,7 +1250,127 @@
           "timeout": 6,
           "runtime": "nodejs18.x",
           "vpc": {},
-          "versionLogicalId": "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw"
+          "versionLogicalId": "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM"
+        },
+        "login": {
+          "handler": "src/functions/users.login",
+          "events": [
+            {
+              "http": {
+                "path": "users/login",
+                "method": "post",
+                "cors": {
+                  "origin": "*",
+                  "methods": [
+                    "POST",
+                    "OPTIONS"
+                  ],
+                  "headers": [
+                    "Content-Type",
+                    "Authorization"
+                  ],
+                  "allowCredentials": "<REDACTED>"
+                },
+                "integration": "AWS_PROXY"
+              }
+            }
+          ],
+          "name": "sweet-sensei-dev-login",
+          "environment": {
+            "NODE_OPTIONS": "--enable-source-maps"
+          },
+          "package": {
+            "artifact": "/Users/timmy/Documents/Code/sweet_sensei/backend/.serverless/build/sweet-sensei-login.zip"
+          },
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs18.x",
+          "vpc": {},
+          "versionLogicalId": "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q"
+        },
+        "addProduct": {
+          "handler": "src/functions/products.addProduct",
+          "events": [
+            {
+              "http": {
+                "path": "products",
+                "method": "post",
+                "cors": {
+                  "origin": "*",
+                  "methods": [
+                    "POST",
+                    "OPTIONS"
+                  ],
+                  "headers": [
+                    "Content-Type",
+                    "Authorization"
+                  ],
+                  "allowCredentials": "<REDACTED>"
+                },
+                "integration": "AWS_PROXY"
+              }
+            }
+          ],
+          "name": "sweet-sensei-dev-addProduct",
+          "environment": {
+            "NODE_OPTIONS": "--enable-source-maps"
+          },
+          "package": {
+            "artifact": "/Users/timmy/Documents/Code/sweet_sensei/backend/.serverless/build/sweet-sensei-addProduct.zip"
+          },
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs18.x",
+          "vpc": {},
+          "versionLogicalId": "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs"
+        },
+        "getProducts": {
+          "handler": "src/functions/products.getProducts",
+          "events": [
+            {
+              "http": {
+                "path": "products",
+                "method": "get",
+                "integration": "AWS_PROXY"
+              }
+            }
+          ],
+          "name": "sweet-sensei-dev-getProducts",
+          "environment": {
+            "NODE_OPTIONS": "--enable-source-maps"
+          },
+          "package": {
+            "artifact": "/Users/timmy/Documents/Code/sweet_sensei/backend/.serverless/build/sweet-sensei-getProducts.zip"
+          },
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs18.x",
+          "vpc": {},
+          "versionLogicalId": "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg"
+        },
+        "getProduct": {
+          "handler": "src/functions/products.getProduct",
+          "events": [
+            {
+              "http": {
+                "path": "products/{id}",
+                "method": "get",
+                "integration": "AWS_PROXY"
+              }
+            }
+          ],
+          "name": "sweet-sensei-dev-getProduct",
+          "environment": {
+            "NODE_OPTIONS": "--enable-source-maps"
+          },
+          "package": {
+            "artifact": "/Users/timmy/Documents/Code/sweet_sensei/backend/.serverless/build/sweet-sensei-getProduct.zip"
+          },
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs18.x",
+          "vpc": {},
+          "versionLogicalId": "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E"
         }
       },
       "resources": {
@@ -549,6 +1411,25 @@
                 }
               ]
             }
+          },
+          "ProductsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "dev-products",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "id",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "id",
+                  "KeyType": "HASH"
+                }
+              ]
+            }
           }
         },
         "Outputs": {}
@@ -561,6 +1442,9 @@
       "region": "us-east-1",
       "environment": {
         "NODE_ENV": "dev"
+      },
+      "httpApi": {
+        "cors": true
       },
       "iam": {
         "role": {
@@ -581,6 +1465,27 @@
                     "UsersTable",
                     "Arn"
                   ]
+                },
+                {
+                  "Fn::GetAtt": [
+                    "ProductsTable",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "UsersTable",
+                          "Arn"
+                        ]
+                      },
+                      "index",
+                      "EmailIndex"
+                    ]
+                  ]
                 }
               ]
             }
@@ -596,6 +1501,30 @@
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
               "LogGroupName": "/aws/lambda/sweet-sensei-dev-signup"
+            }
+          },
+          "LoginLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/sweet-sensei-dev-login"
+            }
+          },
+          "AddProductLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/sweet-sensei-dev-addProduct"
+            }
+          },
+          "GetProductsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/sweet-sensei-dev-getProducts"
+            }
+          },
+          "GetProductLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/sweet-sensei-dev-getProduct"
             }
           },
           "IamRoleLambdaExecution": {
@@ -672,6 +1601,27 @@
                               "UsersTable",
                               "Arn"
                             ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "ProductsTable",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::Join": [
+                              "/",
+                              [
+                                {
+                                  "Fn::GetAtt": [
+                                    "UsersTable",
+                                    "Arn"
+                                  ]
+                                },
+                                "index",
+                                "EmailIndex"
+                              ]
+                            ]
                           }
                         ]
                       }
@@ -700,9 +1650,9 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-                "S3Key": "serverless/sweet-sensei/dev/1739262484540-2025-02-11T08:28:04.540Z/sweet-sensei-signup.zip"
+                "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-signup.zip"
               },
-              "Handler": "src/functions/users/handler.signup",
+              "Handler": "src/functions/users.signup",
               "Runtime": "nodejs18.x",
               "FunctionName": "sweet-sensei-dev-signup",
               "MemorySize": 1024,
@@ -724,14 +1674,170 @@
               "SignupLogGroup"
             ]
           },
-          "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw": {
+          "LoginLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-login.zip"
+              },
+              "Handler": "src/functions/users.login",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "sweet-sensei-dev-login",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "NODE_ENV": "dev",
+                  "NODE_OPTIONS": "--enable-source-maps"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "LoginLogGroup"
+            ]
+          },
+          "AddProductLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-addProduct.zip"
+              },
+              "Handler": "src/functions/products.addProduct",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "sweet-sensei-dev-addProduct",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "NODE_ENV": "dev",
+                  "NODE_OPTIONS": "--enable-source-maps"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "AddProductLogGroup"
+            ]
+          },
+          "GetProductsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-getProducts.zip"
+              },
+              "Handler": "src/functions/products.getProducts",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "sweet-sensei-dev-getProducts",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "NODE_ENV": "dev",
+                  "NODE_OPTIONS": "--enable-source-maps"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetProductsLogGroup"
+            ]
+          },
+          "GetProductLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+                "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-getProduct.zip"
+              },
+              "Handler": "src/functions/products.getProduct",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "sweet-sensei-dev-getProduct",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "NODE_ENV": "dev",
+                  "NODE_OPTIONS": "--enable-source-maps"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetProductLogGroup"
+            ]
+          },
+          "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetProductsLambdaFunction"
+              },
+              "CodeSha256": "M2bnXIyYLsnLBixyA+M/k4PL56bZcKxdzhyXsN0PldQ="
+            }
+          },
+          "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SignupLambdaFunction"
               },
-              "CodeSha256": "Rl+FB2Tma8iqcdETpWUd8xC+7g3kjfgVhnKHqWTijXU="
+              "CodeSha256": "tCpySWE5xogkywGAmfMADgu5FzFc169nN3x5Ixg7y20="
+            }
+          },
+          "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "AddProductLambdaFunction"
+              },
+              "CodeSha256": "yTitNkDaYhEGWZX1yrRPNhXoBXsC6N9+awYhYnHiKGw="
+            }
+          },
+          "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetProductLambdaFunction"
+              },
+              "CodeSha256": "o1upIdYL7EhSG3F9Wr+G1TDZzsQsAROWdcVq/+yyJF0="
+            }
+          },
+          "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "LoginLambdaFunction"
+              },
+              "CodeSha256": "tCpySWE5xogkywGAmfMADgu5FzFc169nN3x5Ixg7y20="
             }
           },
           "ApiGatewayRestApi": {
@@ -756,6 +1862,45 @@
                 ]
               },
               "PathPart": "users",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceUsersLogin": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceUsers"
+              },
+              "PathPart": "login",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceProducts": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "products",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceProductsIdVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceProducts"
+              },
+              "PathPart": "{id}",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -789,8 +1934,8 @@
                     "StatusCode": "200",
                     "ResponseParameters": {
                       "method.response.header.Access-Control-Allow-Origin": "'*'",
-                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                      "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
                     },
                     "ResponseTemplates": {
                       "application/json": ""
@@ -800,6 +1945,96 @@
               },
               "ResourceId": {
                 "Ref": "ApiGatewayResourceUsers"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodUsersLoginOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                      "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceUsersLogin"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodProductsOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                      "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceProducts"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -852,7 +2087,191 @@
               "SignupLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1739262479335": {
+          "ApiGatewayMethodUsersLoginPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceUsersLogin"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": "<REDACTED>",
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "LoginLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "LoginLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodProductsPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceProducts"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": "<REDACTED>",
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "AddProductLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "AddProductLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodProductsGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceProducts"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": "<REDACTED>",
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetProductsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetProductsLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodProductsIdVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceProductsIdVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": "<REDACTED>",
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetProductLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetProductLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1739345463718": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -862,7 +2281,13 @@
             },
             "DependsOn": [
               "ApiGatewayMethodUsersOptions",
-              "ApiGatewayMethodUsersPost"
+              "ApiGatewayMethodUsersLoginOptions",
+              "ApiGatewayMethodProductsOptions",
+              "ApiGatewayMethodUsersPost",
+              "ApiGatewayMethodUsersLoginPost",
+              "ApiGatewayMethodProductsPost",
+              "ApiGatewayMethodProductsGet",
+              "ApiGatewayMethodProductsIdVarGet"
             ]
           },
           "SignupLambdaPermissionApiGateway": {
@@ -871,6 +2296,154 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "SignupLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "LoginLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "LoginLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "AddProductLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "AddProductLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetProductsLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetProductsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetProductLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetProductLambdaFunction",
                   "Arn"
                 ]
               },
@@ -938,6 +2511,25 @@
                 }
               ]
             }
+          },
+          "ProductsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "dev-products",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "id",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "id",
+                  "KeyType": "HASH"
+                }
+              ]
+            }
           }
         },
         "Outputs": {
@@ -947,13 +2539,49 @@
               "Name": "sls-sweet-sensei-dev-ServerlessDeploymentBucketName"
             }
           },
+          "GetProductsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg"
+            },
+            "Export": {
+              "Name": "sls-sweet-sensei-dev-GetProductsLambdaFunctionQualifiedArn"
+            }
+          },
           "SignupLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw"
+              "Ref": "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM"
             },
             "Export": {
               "Name": "sls-sweet-sensei-dev-SignupLambdaFunctionQualifiedArn"
+            }
+          },
+          "AddProductLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs"
+            },
+            "Export": {
+              "Name": "sls-sweet-sensei-dev-AddProductLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetProductLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E"
+            },
+            "Export": {
+              "Name": "sls-sweet-sensei-dev-GetProductLambdaFunctionQualifiedArn"
+            }
+          },
+          "LoginLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q"
+            },
+            "Export": {
+              "Name": "sls-sweet-sensei-dev-LoginLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -995,7 +2623,7 @@
       "serviceProvider": null,
       "instanceParameters": null
     },
-    "serviceRawFile": "service: sweet-sensei\n\nframeworkVersion: '4'\n\nprovider:\n  name: aws\n  runtime: nodejs18.x\n  stage: ${opt:stage, 'dev'}\n  region: ${opt:region, 'us-east-1'}\n  environment:\n    NODE_ENV: ${self:provider.stage}\n  \n  iam:\n    role:\n      statements:\n        - Effect: Allow\n          Action:\n            - dynamodb:Query\n            - dynamodb:Scan\n            - dynamodb:GetItem\n            - dynamodb:PutItem\n            - dynamodb:UpdateItem\n            - dynamodb:DeleteItem\n          Resource: \n            - !GetAtt UsersTable.Arn\n\ncustom:\n  esbuild:\n    bundle: true\n    minify: false\n    sourcemap: true\n    exclude: ['aws-sdk']\n    target: 'node18'\n    define:\n      'require.resolve': undefined\n    platform: 'node'\n    concurrency: 10\n\nplugins:\n  - serverless-offline\n\npackage:\n  individually: true\n  patterns:\n    - '!node_modules/.prisma/**'\n    - '!node_modules/@prisma/**'\n    - '!tests/**'\n\nfunctions:\n  signup:\n    handler: src/functions/users/handler.signup\n    events:\n      - http:\n          path: /users\n          method: post\n          cors: true\n\nresources:\n  Resources:\n    UsersTable:\n      Type: AWS::DynamoDB::Table\n      Properties:\n        TableName: ${self:provider.stage}-users\n        BillingMode: PAY_PER_REQUEST\n        AttributeDefinitions:\n          - AttributeName: id\n            AttributeType: S\n          - AttributeName: email\n            AttributeType: S\n        KeySchema:\n          - AttributeName: id\n            KeyType: HASH\n        GlobalSecondaryIndexes:\n          - IndexName: EmailIndex\n            KeySchema:\n              - AttributeName: email\n                KeyType: HASH\n            Projection:\n              ProjectionType: ALL ",
+    "serviceRawFile": "service: sweet-sensei\n\nframeworkVersion: '4'\n\nprovider:\n  name: aws\n  runtime: nodejs18.x\n  stage: ${opt:stage, 'dev'}\n  region: ${opt:region, 'us-east-1'}\n  environment:\n    NODE_ENV: ${self:provider.stage}\n  httpApi:\n    cors: true\n  \n  iam:\n    role:\n      statements:\n        - Effect: Allow\n          Action:\n            - dynamodb:Query\n            - dynamodb:Scan\n            - dynamodb:GetItem\n            - dynamodb:PutItem\n            - dynamodb:UpdateItem\n            - dynamodb:DeleteItem\n          Resource: \n            - !GetAtt UsersTable.Arn\n            - !GetAtt ProductsTable.Arn\n            - !Join\n              - '/'\n              - - !GetAtt UsersTable.Arn\n                - 'index'\n                - 'EmailIndex'\n\ncustom:\n  esbuild:\n    bundle: true\n    minify: false\n    sourcemap: true\n    exclude: ['aws-sdk']\n    target: 'node18'\n    define:\n      'require.resolve': undefined\n    platform: 'node'\n    concurrency: 10\n\nplugins:\n  - serverless-offline\n\npackage:\n  individually: true\n  patterns:\n    - '!node_modules/.prisma/**'\n    - '!node_modules/@prisma/**'\n    - '!tests/**'\n\nfunctions:\n  signup:\n    handler: src/functions/users.signup\n    events:\n      - http:\n          path: /users\n          method: post\n          cors:\n            origin: '*'\n            headers:\n              - Content-Type\n              - Authorization\n            methods:\n              - POST\n              - OPTIONS\n            allowCredentials: false\n  login:\n    handler: src/functions/users.login\n    events:\n      - http:\n          path: /users/login\n          method: post\n          cors:\n            origin: '*'\n            headers:\n              - Content-Type\n              - Authorization\n            methods:\n              - POST\n              - OPTIONS\n            allowCredentials: false\n  addProduct:\n    handler: src/functions/products.addProduct\n    events:\n      - http:\n          path: /products\n          method: post\n          cors:\n            origin: '*'\n            headers:\n              - Content-Type\n              - Authorization\n            methods:\n              - POST\n              - OPTIONS\n            allowCredentials: false\n  getProducts:\n    handler: src/functions/products.getProducts\n    events:\n      - http:\n          path: /products\n          method: get\n  getProduct:\n    handler: src/functions/products.getProduct\n    events:\n      - http:\n          path: /products/{id}\n          method: get\n\nresources:\n  Resources:\n    UsersTable:\n      Type: AWS::DynamoDB::Table\n      Properties:\n        TableName: ${self:provider.stage}-users\n        BillingMode: PAY_PER_REQUEST\n        AttributeDefinitions:\n          - AttributeName: id\n            AttributeType: S\n          - AttributeName: email\n            AttributeType: S\n        KeySchema:\n          - AttributeName: id\n            KeyType: HASH\n        GlobalSecondaryIndexes:\n          - IndexName: EmailIndex\n            KeySchema:\n              - AttributeName: email\n                KeyType: HASH\n            Projection:\n              ProjectionType: ALL\n    ProductsTable:\n      Type: AWS::DynamoDB::Table\n      Properties:\n        TableName: ${self:provider.stage}-products\n        BillingMode: PAY_PER_REQUEST\n        AttributeDefinitions:\n          - AttributeName: id\n            AttributeType: S\n        KeySchema:\n          - AttributeName: id\n            KeyType: HASH ",
     "command": [
       "deploy"
     ],
@@ -1008,14 +2636,26 @@
     "serviceProviderAwsCfStackName": "sweet-sensei-dev",
     "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:770107744332:stack/sweet-sensei-dev/8eff53e0-e845-11ef-84b6-0ec39c392a3f",
     "serviceProviderAwsCfStackCreated": "2025-02-11T06:58:12.249Z",
-    "serviceProviderAwsCfStackUpdated": null,
-    "serviceProviderAwsCfStackStatus": "CREATE_COMPLETE",
+    "serviceProviderAwsCfStackUpdated": "2025-02-12T05:19:19.721Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
-        "OutputKey": "HelloLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:us-east-1:770107744332:function:sweet-sensei-dev-hello:1",
+        "OutputKey": "AddProductLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:770107744332:function:sweet-sensei-dev-addProduct:5",
         "Description": "Current Lambda function version",
-        "ExportName": "sls-sweet-sensei-dev-HelloLambdaFunctionQualifiedArn"
+        "ExportName": "sls-sweet-sensei-dev-AddProductLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "SignupLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:770107744332:function:sweet-sensei-dev-signup:8",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-sweet-sensei-dev-SignupLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "LoginLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:770107744332:function:sweet-sensei-dev-login:6",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-sweet-sensei-dev-LoginLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "ServiceEndpoint",
@@ -1027,6 +2667,18 @@
         "OutputKey": "ServerlessDeploymentBucketName",
         "OutputValue": "serverless-framework-deployments-us-east-1-6c855517-cb59",
         "ExportName": "sls-sweet-sensei-dev-ServerlessDeploymentBucketName"
+      },
+      {
+        "OutputKey": "GetProductsLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:770107744332:function:sweet-sensei-dev-getProducts:4",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-sweet-sensei-dev-GetProductsLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GetProductLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:770107744332:function:sweet-sensei-dev-getProduct:4",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-sweet-sensei-dev-GetProductLambdaFunctionQualifiedArn"
       }
     ],
     "compiledCloudFormationTemplate": {
@@ -1037,6 +2689,30 @@
           "Type": "AWS::Logs::LogGroup",
           "Properties": {
             "LogGroupName": "/aws/lambda/sweet-sensei-dev-signup"
+          }
+        },
+        "LoginLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/sweet-sensei-dev-login"
+          }
+        },
+        "AddProductLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/sweet-sensei-dev-addProduct"
+          }
+        },
+        "GetProductsLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/sweet-sensei-dev-getProducts"
+          }
+        },
+        "GetProductLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/sweet-sensei-dev-getProduct"
           }
         },
         "IamRoleLambdaExecution": {
@@ -1113,6 +2789,27 @@
                             "UsersTable",
                             "Arn"
                           ]
+                        },
+                        {
+                          "Fn::GetAtt": [
+                            "ProductsTable",
+                            "Arn"
+                          ]
+                        },
+                        {
+                          "Fn::Join": [
+                            "/",
+                            [
+                              {
+                                "Fn::GetAtt": [
+                                  "UsersTable",
+                                  "Arn"
+                                ]
+                              },
+                              "index",
+                              "EmailIndex"
+                            ]
+                          ]
                         }
                       ]
                     }
@@ -1141,9 +2838,9 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-              "S3Key": "serverless/sweet-sensei/dev/1739262484540-2025-02-11T08:28:04.540Z/sweet-sensei-signup.zip"
+              "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-signup.zip"
             },
-            "Handler": "src/functions/users/handler.signup",
+            "Handler": "src/functions/users.signup",
             "Runtime": "nodejs18.x",
             "FunctionName": "sweet-sensei-dev-signup",
             "MemorySize": 1024,
@@ -1165,14 +2862,170 @@
             "SignupLogGroup"
           ]
         },
-        "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw": {
+        "LoginLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+              "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-login.zip"
+            },
+            "Handler": "src/functions/users.login",
+            "Runtime": "nodejs18.x",
+            "FunctionName": "sweet-sensei-dev-login",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "NODE_ENV": "dev",
+                "NODE_OPTIONS": "--enable-source-maps"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "LoginLogGroup"
+          ]
+        },
+        "AddProductLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+              "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-addProduct.zip"
+            },
+            "Handler": "src/functions/products.addProduct",
+            "Runtime": "nodejs18.x",
+            "FunctionName": "sweet-sensei-dev-addProduct",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "NODE_ENV": "dev",
+                "NODE_OPTIONS": "--enable-source-maps"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "AddProductLogGroup"
+          ]
+        },
+        "GetProductsLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+              "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-getProducts.zip"
+            },
+            "Handler": "src/functions/products.getProducts",
+            "Runtime": "nodejs18.x",
+            "FunctionName": "sweet-sensei-dev-getProducts",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "NODE_ENV": "dev",
+                "NODE_OPTIONS": "--enable-source-maps"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "GetProductsLogGroup"
+          ]
+        },
+        "GetProductLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+              "S3Key": "serverless/sweet-sensei/dev/1739345471775-2025-02-12T07:31:11.775Z/sweet-sensei-getProduct.zip"
+            },
+            "Handler": "src/functions/products.getProduct",
+            "Runtime": "nodejs18.x",
+            "FunctionName": "sweet-sensei-dev-getProduct",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "NODE_ENV": "dev",
+                "NODE_OPTIONS": "--enable-source-maps"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "GetProductLogGroup"
+          ]
+        },
+        "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "GetProductsLambdaFunction"
+            },
+            "CodeSha256": "M2bnXIyYLsnLBixyA+M/k4PL56bZcKxdzhyXsN0PldQ="
+          }
+        },
+        "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "SignupLambdaFunction"
             },
-            "CodeSha256": "Rl+FB2Tma8iqcdETpWUd8xC+7g3kjfgVhnKHqWTijXU="
+            "CodeSha256": "tCpySWE5xogkywGAmfMADgu5FzFc169nN3x5Ixg7y20="
+          }
+        },
+        "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "AddProductLambdaFunction"
+            },
+            "CodeSha256": "yTitNkDaYhEGWZX1yrRPNhXoBXsC6N9+awYhYnHiKGw="
+          }
+        },
+        "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "GetProductLambdaFunction"
+            },
+            "CodeSha256": "o1upIdYL7EhSG3F9Wr+G1TDZzsQsAROWdcVq/+yyJF0="
+          }
+        },
+        "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "LoginLambdaFunction"
+            },
+            "CodeSha256": "tCpySWE5xogkywGAmfMADgu5FzFc169nN3x5Ixg7y20="
           }
         },
         "ApiGatewayRestApi": {
@@ -1197,6 +3050,45 @@
               ]
             },
             "PathPart": "users",
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            }
+          }
+        },
+        "ApiGatewayResourceUsersLogin": {
+          "Type": "AWS::ApiGateway::Resource",
+          "Properties": {
+            "ParentId": {
+              "Ref": "ApiGatewayResourceUsers"
+            },
+            "PathPart": "login",
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            }
+          }
+        },
+        "ApiGatewayResourceProducts": {
+          "Type": "AWS::ApiGateway::Resource",
+          "Properties": {
+            "ParentId": {
+              "Fn::GetAtt": [
+                "ApiGatewayRestApi",
+                "RootResourceId"
+              ]
+            },
+            "PathPart": "products",
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            }
+          }
+        },
+        "ApiGatewayResourceProductsIdVar": {
+          "Type": "AWS::ApiGateway::Resource",
+          "Properties": {
+            "ParentId": {
+              "Ref": "ApiGatewayResourceProducts"
+            },
+            "PathPart": "{id}",
             "RestApiId": {
               "Ref": "ApiGatewayRestApi"
             }
@@ -1230,8 +3122,8 @@
                   "StatusCode": "200",
                   "ResponseParameters": {
                     "method.response.header.Access-Control-Allow-Origin": "'*'",
-                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                    "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
                   },
                   "ResponseTemplates": {
                     "application/json": ""
@@ -1241,6 +3133,96 @@
             },
             "ResourceId": {
               "Ref": "ApiGatewayResourceUsers"
+            },
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            }
+          }
+        },
+        "ApiGatewayMethodUsersLoginOptions": {
+          "Type": "AWS::ApiGateway::Method",
+          "Properties": {
+            "AuthorizationType": "NONE",
+            "HttpMethod": "OPTIONS",
+            "MethodResponses": [
+              {
+                "StatusCode": "200",
+                "ResponseParameters": {
+                  "method.response.header.Access-Control-Allow-Origin": true,
+                  "method.response.header.Access-Control-Allow-Headers": true,
+                  "method.response.header.Access-Control-Allow-Methods": true
+                },
+                "ResponseModels": {}
+              }
+            ],
+            "RequestParameters": {},
+            "Integration": {
+              "Type": "MOCK",
+              "RequestTemplates": {
+                "application/json": "{statusCode:200}"
+              },
+              "ContentHandling": "CONVERT_TO_TEXT",
+              "IntegrationResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": "'*'",
+                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                    "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+                  },
+                  "ResponseTemplates": {
+                    "application/json": ""
+                  }
+                }
+              ]
+            },
+            "ResourceId": {
+              "Ref": "ApiGatewayResourceUsersLogin"
+            },
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            }
+          }
+        },
+        "ApiGatewayMethodProductsOptions": {
+          "Type": "AWS::ApiGateway::Method",
+          "Properties": {
+            "AuthorizationType": "NONE",
+            "HttpMethod": "OPTIONS",
+            "MethodResponses": [
+              {
+                "StatusCode": "200",
+                "ResponseParameters": {
+                  "method.response.header.Access-Control-Allow-Origin": true,
+                  "method.response.header.Access-Control-Allow-Headers": true,
+                  "method.response.header.Access-Control-Allow-Methods": true
+                },
+                "ResponseModels": {}
+              }
+            ],
+            "RequestParameters": {},
+            "Integration": {
+              "Type": "MOCK",
+              "RequestTemplates": {
+                "application/json": "{statusCode:200}"
+              },
+              "ContentHandling": "CONVERT_TO_TEXT",
+              "IntegrationResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": "'*'",
+                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                    "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+                  },
+                  "ResponseTemplates": {
+                    "application/json": ""
+                  }
+                }
+              ]
+            },
+            "ResourceId": {
+              "Ref": "ApiGatewayResourceProducts"
             },
             "RestApiId": {
               "Ref": "ApiGatewayRestApi"
@@ -1293,7 +3275,191 @@
             "SignupLambdaPermissionApiGateway"
           ]
         },
-        "ApiGatewayDeployment1739262479335": {
+        "ApiGatewayMethodUsersLoginPost": {
+          "Type": "AWS::ApiGateway::Method",
+          "Properties": {
+            "HttpMethod": "POST",
+            "RequestParameters": {},
+            "ResourceId": {
+              "Ref": "ApiGatewayResourceUsersLogin"
+            },
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "ApiKeyRequired": "<REDACTED>",
+            "AuthorizationType": "NONE",
+            "Integration": {
+              "IntegrationHttpMethod": "POST",
+              "Type": "AWS_PROXY",
+              "Uri": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":apigateway:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":lambda:path/2015-03-31/functions/",
+                    {
+                      "Fn::GetAtt": [
+                        "LoginLambdaFunction",
+                        "Arn"
+                      ]
+                    },
+                    "/invocations"
+                  ]
+                ]
+              }
+            },
+            "MethodResponses": []
+          },
+          "DependsOn": [
+            "LoginLambdaPermissionApiGateway"
+          ]
+        },
+        "ApiGatewayMethodProductsPost": {
+          "Type": "AWS::ApiGateway::Method",
+          "Properties": {
+            "HttpMethod": "POST",
+            "RequestParameters": {},
+            "ResourceId": {
+              "Ref": "ApiGatewayResourceProducts"
+            },
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "ApiKeyRequired": "<REDACTED>",
+            "AuthorizationType": "NONE",
+            "Integration": {
+              "IntegrationHttpMethod": "POST",
+              "Type": "AWS_PROXY",
+              "Uri": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":apigateway:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":lambda:path/2015-03-31/functions/",
+                    {
+                      "Fn::GetAtt": [
+                        "AddProductLambdaFunction",
+                        "Arn"
+                      ]
+                    },
+                    "/invocations"
+                  ]
+                ]
+              }
+            },
+            "MethodResponses": []
+          },
+          "DependsOn": [
+            "AddProductLambdaPermissionApiGateway"
+          ]
+        },
+        "ApiGatewayMethodProductsGet": {
+          "Type": "AWS::ApiGateway::Method",
+          "Properties": {
+            "HttpMethod": "GET",
+            "RequestParameters": {},
+            "ResourceId": {
+              "Ref": "ApiGatewayResourceProducts"
+            },
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "ApiKeyRequired": "<REDACTED>",
+            "AuthorizationType": "NONE",
+            "Integration": {
+              "IntegrationHttpMethod": "POST",
+              "Type": "AWS_PROXY",
+              "Uri": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":apigateway:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":lambda:path/2015-03-31/functions/",
+                    {
+                      "Fn::GetAtt": [
+                        "GetProductsLambdaFunction",
+                        "Arn"
+                      ]
+                    },
+                    "/invocations"
+                  ]
+                ]
+              }
+            },
+            "MethodResponses": []
+          },
+          "DependsOn": [
+            "GetProductsLambdaPermissionApiGateway"
+          ]
+        },
+        "ApiGatewayMethodProductsIdVarGet": {
+          "Type": "AWS::ApiGateway::Method",
+          "Properties": {
+            "HttpMethod": "GET",
+            "RequestParameters": {},
+            "ResourceId": {
+              "Ref": "ApiGatewayResourceProductsIdVar"
+            },
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "ApiKeyRequired": "<REDACTED>",
+            "AuthorizationType": "NONE",
+            "Integration": {
+              "IntegrationHttpMethod": "POST",
+              "Type": "AWS_PROXY",
+              "Uri": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":apigateway:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":lambda:path/2015-03-31/functions/",
+                    {
+                      "Fn::GetAtt": [
+                        "GetProductLambdaFunction",
+                        "Arn"
+                      ]
+                    },
+                    "/invocations"
+                  ]
+                ]
+              }
+            },
+            "MethodResponses": []
+          },
+          "DependsOn": [
+            "GetProductLambdaPermissionApiGateway"
+          ]
+        },
+        "ApiGatewayDeployment1739345463718": {
           "Type": "AWS::ApiGateway::Deployment",
           "Properties": {
             "RestApiId": {
@@ -1303,7 +3469,13 @@
           },
           "DependsOn": [
             "ApiGatewayMethodUsersOptions",
-            "ApiGatewayMethodUsersPost"
+            "ApiGatewayMethodUsersLoginOptions",
+            "ApiGatewayMethodProductsOptions",
+            "ApiGatewayMethodUsersPost",
+            "ApiGatewayMethodUsersLoginPost",
+            "ApiGatewayMethodProductsPost",
+            "ApiGatewayMethodProductsGet",
+            "ApiGatewayMethodProductsIdVarGet"
           ]
         },
         "SignupLambdaPermissionApiGateway": {
@@ -1312,6 +3484,154 @@
             "FunctionName": {
               "Fn::GetAtt": [
                 "SignupLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  "/*/*"
+                ]
+              ]
+            }
+          }
+        },
+        "LoginLambdaPermissionApiGateway": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "LoginLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  "/*/*"
+                ]
+              ]
+            }
+          }
+        },
+        "AddProductLambdaPermissionApiGateway": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "AddProductLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  "/*/*"
+                ]
+              ]
+            }
+          }
+        },
+        "GetProductsLambdaPermissionApiGateway": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "GetProductsLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  "/*/*"
+                ]
+              ]
+            }
+          }
+        },
+        "GetProductLambdaPermissionApiGateway": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "GetProductLambdaFunction",
                 "Arn"
               ]
             },
@@ -1379,6 +3699,25 @@
               }
             ]
           }
+        },
+        "ProductsTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "TableName": "dev-products",
+            "BillingMode": "PAY_PER_REQUEST",
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "id",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+              }
+            ]
+          }
         }
       },
       "Outputs": {
@@ -1388,13 +3727,49 @@
             "Name": "sls-sweet-sensei-dev-ServerlessDeploymentBucketName"
           }
         },
+        "GetProductsLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "GetProductsLambdaVersiondPHh4CEv1N7ymPlpy70i72FC88xIF6VgiheD5YRGMAg"
+          },
+          "Export": {
+            "Name": "sls-sweet-sensei-dev-GetProductsLambdaFunctionQualifiedArn"
+          }
+        },
         "SignupLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "SignupLambdaVersionsQ9PjS7UhXqbnn3h5mreTsvuf8K9bvxY5rilrV3Qhw"
+            "Ref": "SignupLambdaVersionG49dtj2YIWYkWwdatYIdfYyYpjoBj2w4qMkI6UVYtM"
           },
           "Export": {
             "Name": "sls-sweet-sensei-dev-SignupLambdaFunctionQualifiedArn"
+          }
+        },
+        "AddProductLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "AddProductLambdaVersionigKaajb4pKeYZ8OqwRM7idbEW7ljvMsBAOtkb7Bs"
+          },
+          "Export": {
+            "Name": "sls-sweet-sensei-dev-AddProductLambdaFunctionQualifiedArn"
+          }
+        },
+        "GetProductLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "GetProductLambdaVersionPL8kzX5rqkPWoorN87ITFZnC3dbDhNEFVKP1Ak584E"
+          },
+          "Export": {
+            "Name": "sls-sweet-sensei-dev-GetProductLambdaFunctionQualifiedArn"
+          }
+        },
+        "LoginLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "LoginLambdaVersionZvJ2ot5PZyofjk9BxIvQgphCwyAGA6IgthPNSPF2Q"
+          },
+          "Export": {
+            "Name": "sls-sweet-sensei-dev-LoginLambdaFunctionQualifiedArn"
           }
         },
         "ServiceEndpoint": {

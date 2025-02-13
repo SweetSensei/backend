@@ -14,7 +14,7 @@ const logger = winston.createLogger({
       ),
     }),
   ],
-  defaultMeta: { service: 'sweet-sensei-api' },
+  // defaultMeta: { service: 'sweet-sensei-api' },
 });
 
 export default logger; 
