@@ -116,10 +116,10 @@ functions:
           path: /products/{id}
           method: get
   createCheckoutSession:
-    handler: src/functions/checkout.createSession
+    handler: src/functions/orders.createStripeSession
     events:
       - http:
-          path: /checkout/create-session
+          path: /orders/create-stripe-checkout-session
           method: post
           cors:
             origin: '*'
@@ -160,6 +160,51 @@ functions:
               - GET
               - OPTIONS
             allowCredentials: false
+  upgradeToPartner:
+    handler: src/functions/users.upgradeToPartner
+    events:
+      - http:
+          path: /users/partners
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
+  changePassword:
+    handler: src/functions/users.changePassword
+    events:
+      - http:
+          path: /users/change-password
+          method: put
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - PUT
+              - OPTIONS
+            allowCredentials: false
+  completeOrder:
+    handler: src/functions/orders.completeOrder
+    events:
+      - http:
+          path: /orders/pay/complete
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - POST
+              - OPTIONS
+            allowCredentials: false
 
 resources:
   Resources:
@@ -173,6 +218,8 @@ resources:
             AttributeType: S
           - AttributeName: email
             AttributeType: S
+          - AttributeName: partnerCode
+            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -180,6 +227,12 @@ resources:
           - IndexName: EmailIndex
             KeySchema:
               - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: PartnerCodeIndex
+            KeySchema:
+              - AttributeName: partnerCode
                 KeyType: HASH
             Projection:
               ProjectionType: ALL

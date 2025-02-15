@@ -2,7 +2,7 @@ import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
-import { signupSchema, loginSchema } from 'src/utilities/validations/userValidations';
+import { signupSchema, loginSchema, changePasswordSchema } from 'src/utilities/validations/userValidations';
 import logger from 'src/utilities/logger';
 import { DB_TABLE_NAMES } from 'src/utilities/constants';
 import { generateToken } from 'src/utilities/jwt';
@@ -10,29 +10,10 @@ import { formatResponse } from 'src/utilities/response';
 import { AuthorizedEvent } from 'src/middleware/auth';
 import { authenticate } from 'src/middleware/auth';
 import { addAddressSchema } from 'src/utilities/validations/userValidations';
+import { validateAuth } from 'src/utilities/auth';
+import { generatePartnerCode } from 'src/utilities/helpers/users';
 
 const dynamoDb = new DynamoDB.DocumentClient();
-
-interface Address {
-  id: string;  // Generated unique ID for each address
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-  zipCode: string;
-  isDefault: boolean;
-  label: 'home' | 'work' | 'other';
-}
-
-interface User {
-  id: string;
-  email: string;
-  password: string;
-  role: string;
-  addresses: Address[];
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface SignupRequest {
   email: string;
@@ -164,7 +145,8 @@ export const login = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
     return formatResponse(200, {
       message: 'Login successful',
       token: generateToken({  role: user.Items[0].role, userId: user.Items[0].id }),
-      role: user.Items[0].role
+      role: user.Items[0].role,
+      partnerCode: user.Items[0].partnerCode
     });
 
   } catch (error) {
@@ -181,13 +163,10 @@ export const addAddress = async (event: APIGatewayProxyEvent): Promise<APIGatewa
   try {
     logger.info('POST "/users/addresses"');
 
-    const authResult = await authenticate(event);
-    if ('statusCode' in authResult) {
-      return authResult;
+    const { statusCode, userId } = await validateAuth(event);
+    if (statusCode) {
+      return formatResponse(statusCode, { message: 'Unauthorized' });
     }
-
-    const authenticatedEvent = authResult as AuthorizedEvent;
-    const userId = authenticatedEvent.user?.userId;
 
     const body = JSON.parse(event.body as string)
     
@@ -241,13 +220,10 @@ export const getAddress = async (event: APIGatewayProxyEvent): Promise<APIGatewa
   try {
     logger.info('GET "/users/address"');
 
-    const authResult = await authenticate(event);
-    if ('statusCode' in authResult) {
-      return authResult;
+    const { statusCode, userId } = await validateAuth(event);
+    if (statusCode) {
+      return formatResponse(statusCode, { message: 'Unauthorized' });
     }
-
-    const authenticatedEvent = authResult as AuthorizedEvent;
-    const userId = authenticatedEvent.user?.userId;
 
     const result = await dynamoDb.get({
       TableName: DB_TABLE_NAMES.USERS,
@@ -264,6 +240,129 @@ export const getAddress = async (event: APIGatewayProxyEvent): Promise<APIGatewa
     logger.error('Error fetching address:', error);
     return formatResponse(500, {
       message: 'Could not fetch address'
+    });
+  }
+};
+
+export const upgradeToPartner = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    logger.info('POST "/users/partners"');
+
+    const { statusCode, userId } = await validateAuth(event);
+    if (statusCode) {
+      return formatResponse(statusCode, { message: 'Unauthorized' });
+    }
+
+    // Check if user is already a partner
+    const userResult = await dynamoDb.get({
+      TableName: DB_TABLE_NAMES.USERS,
+      Key: {
+        id: userId
+      }
+    }).promise();
+
+    const user = userResult.Item;
+    
+    if (user?.role === 'partner') {
+      return formatResponse(200, {
+        message: 'User is already a partner',
+        partnerCode: user.partnerCode
+      });
+    }
+
+    // Continue with partner code generation if user is not already a partner
+    const partnerCode = await generatePartnerCode();
+
+    logger.info('Partner code generated:', { partnerCode });
+
+    // Update user with partner code and role
+    await dynamoDb.update({
+      TableName: DB_TABLE_NAMES.USERS,
+      Key: { id: userId },
+      UpdateExpression: 'SET partnerCode = :partnerCode, #userRole = :role, updatedAt = :updatedAt',
+      ExpressionAttributeNames: {
+        '#userRole': 'role'
+      },
+      ExpressionAttributeValues: {
+        ':partnerCode': partnerCode,
+        ':role': 'partner',
+        ':updatedAt': new Date().toISOString()
+      },
+      ReturnValues: 'ALL_NEW'
+    }).promise();
+
+    return formatResponse(200, {
+      message: 'Successfully upgraded to partner',
+      partnerCode: partnerCode
+    });
+
+  } catch (error) {
+    logger.error('Error upgrading to partner:', error);
+    return formatResponse(500, {
+      message: 'Could not upgrade to partner'
+    });
+  }
+};
+
+export const changePassword = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    logger.info('PUT "/users/password"');
+
+    const { statusCode, userId } = await validateAuth(event);
+    if (statusCode) {
+      return formatResponse(statusCode, { message: 'Unauthorized' });
+    }
+
+    const body = JSON.parse(event.body as string);
+    const { error, value } = changePasswordSchema.validate(body, { abortEarly: false });
+
+    if (error) {
+      logger.error('Validation error', { errors: error.details.map(detail => detail.message) });
+      return formatResponse(400, {
+        message: 'Validation error',
+        errors: error.details.map(detail => detail.message)
+      });
+    }
+
+    // Get current user
+    const user = await dynamoDb.get({
+      TableName: DB_TABLE_NAMES.USERS,
+      Key: { id: userId }
+    }).promise();
+
+    if (!user.Item) {
+      return formatResponse(401, { message: 'Unauthorized' });
+    }
+
+    // Verify current password
+    const isValidPassword = await bcrypt.compare(value.currentPassword, user.Item.password);
+    if (!isValidPassword) {
+      return formatResponse(400, { message: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(value.newPassword, salt);
+
+    // Update password
+    await dynamoDb.update({
+      TableName: DB_TABLE_NAMES.USERS,
+      Key: { id: userId },
+      UpdateExpression: 'SET password = :password, updatedAt = :updatedAt',
+      ExpressionAttributeValues: {
+        ':password': hashedPassword,
+        ':updatedAt': new Date().toISOString()
+      }
+    }).promise();
+
+    return formatResponse(200, {
+      message: 'Password updated successfully'
+    });
+
+  } catch (error) {
+    logger.error('Error changing password:', error);
+    return formatResponse(500, {
+      message: 'Could not change password'
     });
   }
 };
