@@ -68,6 +68,7 @@ export const createStripeSession = async (event: APIGatewayProxyEvent): Promise<
       return {
         ...item,
         price: product.price,
+        image: product.image
       };
     }));
 
@@ -108,6 +109,7 @@ export const createStripeSession = async (event: APIGatewayProxyEvent): Promise<
         id: item.id,
         name: item.name,
         price: item.price,
+        image: item.image,
         quantity: item.quantity,
       })),
       totalAmount: validProducts.reduce((sum, item) => sum + (item.price * item.quantity), 0),
@@ -219,6 +221,36 @@ export const completeOrder = async (event: APIGatewayProxyEvent): Promise<APIGat
     logger.error('Error completing order:', error);
     return formatResponse(500, {
       message: 'Could not complete order'
+    });
+  }
+};
+
+export const getOrders = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    logger.info('GET "/orders"');
+
+    const { statusCode, userId } = await validateAuth(event);
+    if (statusCode) {
+      return formatResponse(statusCode, { message: 'Unauthorized' });
+    }
+
+    // Get all orders for user
+    const result = await dynamoDb.scan({
+      TableName: DB_TABLE_NAMES.ORDERS,
+      FilterExpression: 'userId = :userId',
+      ExpressionAttributeValues: {
+        ':userId': userId
+      }
+    }).promise();
+
+    return formatResponse(200, {
+      orders: result.Items || []
+    });
+
+  } catch (error) {
+    logger.error('Error fetching orders:', error);
+    return formatResponse(500, {
+      message: 'Could not fetch orders'
     });
   }
 }; 

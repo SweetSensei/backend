@@ -115,6 +115,8 @@ functions:
       - http:
           path: /products/{id}
           method: get
+          cors:
+            origin: '*'
   createCheckoutSession:
     handler: src/functions/orders.createStripeSession
     events:
@@ -203,6 +205,21 @@ functions:
               - Authorization
             methods:
               - POST
+              - OPTIONS
+            allowCredentials: false
+  getOrders:
+    handler: src/functions/orders.getOrders
+    events:
+      - http:
+          path: /orders
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - GET
               - OPTIONS
             allowCredentials: false
 

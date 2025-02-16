@@ -68,6 +68,12 @@
         "LogGroupName": "/aws/lambda/sweet-sensei-dev-completeOrder"
       }
     },
+    "GetOrdersLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/sweet-sensei-dev-getOrders"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -197,7 +203,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-signup.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-signup.zip"
         },
         "Handler": "src/functions/users.signup",
         "Runtime": "nodejs18.x",
@@ -228,7 +234,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-login.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-login.zip"
         },
         "Handler": "src/functions/users.login",
         "Runtime": "nodejs18.x",
@@ -259,7 +265,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-addProduct.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-addProduct.zip"
         },
         "Handler": "src/functions/products.addProduct",
         "Runtime": "nodejs18.x",
@@ -290,7 +296,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-getProducts.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-getProducts.zip"
         },
         "Handler": "src/functions/products.getProducts",
         "Runtime": "nodejs18.x",
@@ -321,7 +327,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-getProduct.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-getProduct.zip"
         },
         "Handler": "src/functions/products.getProduct",
         "Runtime": "nodejs18.x",
@@ -352,7 +358,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-createCheckoutSession.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-createCheckoutSession.zip"
         },
         "Handler": "src/functions/orders.createStripeSession",
         "Runtime": "nodejs18.x",
@@ -383,7 +389,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-addAddress.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-addAddress.zip"
         },
         "Handler": "src/functions/users.addAddress",
         "Runtime": "nodejs18.x",
@@ -414,7 +420,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-getAddress.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-getAddress.zip"
         },
         "Handler": "src/functions/users.getAddress",
         "Runtime": "nodejs18.x",
@@ -445,7 +451,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-upgradeToPartner.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-upgradeToPartner.zip"
         },
         "Handler": "src/functions/users.upgradeToPartner",
         "Runtime": "nodejs18.x",
@@ -476,7 +482,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-changePassword.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-changePassword.zip"
         },
         "Handler": "src/functions/users.changePassword",
         "Runtime": "nodejs18.x",
@@ -507,7 +513,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
-          "S3Key": "serverless/sweet-sensei/dev/1739611294313-2025-02-15T09:21:34.313Z/sweet-sensei-completeOrder.zip"
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-completeOrder.zip"
         },
         "Handler": "src/functions/orders.completeOrder",
         "Runtime": "nodejs18.x",
@@ -533,114 +539,155 @@
         "CompleteOrderLogGroup"
       ]
     },
-    "GetProductLambdaVersionrEcOEXNAPgjcmG0iW5lKaBTX3Mm87yGTcMxg7IJ2E": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
+    "GetOrdersLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
       "Properties": {
-        "FunctionName": {
-          "Ref": "GetProductLambdaFunction"
+        "Code": {
+          "S3Bucket": "serverless-framework-deployments-us-east-1-6c855517-cb59",
+          "S3Key": "serverless/sweet-sensei/dev/1739692014528-2025-02-16T07:46:54.528Z/sweet-sensei-getOrders.zip"
         },
-        "CodeSha256": "Qpz387R2I6o0Ln1aOx+1qzV733rXXShmlU8XFG9CaWI="
-      }
-    },
-    "AddProductLambdaVersionpHahhPTDIoIjcBtcVwp30zSuURf0gkRnZfd6ycQPFDc": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "AddProductLambdaFunction"
+        "Handler": "src/functions/orders.getOrders",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "sweet-sensei-dev-getOrders",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "NODE_ENV": "dev",
+            "STRIPE_SECRET_KEY": "",
+            "CLIENT_URL": "http://localhost:8000",
+            "NODE_OPTIONS": "--enable-source-maps"
+          }
         },
-        "CodeSha256": "Qpz387R2I6o0Ln1aOx+1qzV733rXXShmlU8XFG9CaWI="
-      }
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetOrdersLogGroup"
+      ]
     },
-    "GetProductsLambdaVersion8exeX06UGvBMefdEniPdqKDg1EpBa793IuexdjNMENc": {
+    "GetProductsLambdaVersion9j7vAAo66QDBJgPOPsBUZczzCOF5xpJDHE65p4fPZQw": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetProductsLambdaFunction"
         },
-        "CodeSha256": "Qpz387R2I6o0Ln1aOx+1qzV733rXXShmlU8XFG9CaWI="
+        "CodeSha256": "2HENsjBrdPKozN78rgIUpKawDs1UOsD2dfBUnJJEBeo="
       }
     },
-    "CreateCheckoutSessionLambdaVersion4PDc86IAGQh2qATRMJvu8VrHjirwJgFRl61dFb3HZc": {
+    "AddProductLambdaVersion3WGHfuQgvtvIGsYlPs17whLb0tOAIPDy9EEwlVuns7Y": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "AddProductLambdaFunction"
+        },
+        "CodeSha256": "/bL7Us4OXFWKBTOcCBzJiPDnCl+dhoxbpbXuiyner3s="
+      }
+    },
+    "GetProductLambdaVersionbJGVQEdA5nppyfoRX48uaJyelkEHZRmDsszSi2J2BbY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetProductLambdaFunction"
+        },
+        "CodeSha256": "/bL7Us4OXFWKBTOcCBzJiPDnCl+dhoxbpbXuiyner3s="
+      }
+    },
+    "CreateCheckoutSessionLambdaVersionHifEiNaEShF5N2c4aDcc6ZYG2lHJI01LVzvpQ07PMCg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "CreateCheckoutSessionLambdaFunction"
         },
-        "CodeSha256": "nScOE+Ny8fhSpGpEfD9IgNwPW8YrrzFYhxeTPbGZ3Bw="
+        "CodeSha256": "OJ6InySFFJuOupEz5Vu5bQZEjNxj9MKisDSbfQIKD7Y="
       }
     },
-    "CompleteOrderLambdaVersionR4Kt6hhed0zsrFKYKEZP9lcaWgxxBqfZTpmcCW1hzQw": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "CompleteOrderLambdaFunction"
-        },
-        "CodeSha256": "CJddxfjSvcE1MQrX1EivTtZZltI3vH2OJg21fXbumuU="
-      }
-    },
-    "SignupLambdaVersiongbFQWBqgXhNl6eBZCGZni3uFxfBiOVxibWkIfqs41sM": {
+    "SignupLambdaVersionTsZsf9Pa94v8PicmDGdMOVmvlbBCzFzCRIQvXTZdA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SignupLambdaFunction"
         },
-        "CodeSha256": "LmXlOVeiHdPuOYNn61uXByF0DVZcmfn2n6PII2uj6n0="
+        "CodeSha256": "W1WTAQ/Q0k3EI9+057aceJr4LkpSbKqlHy8Gfo3clz8="
       }
     },
-    "LoginLambdaVersionYNjKLUlYUCEzkR3RMQx6imx9oW58WCloWNuKI8Fs": {
+    "GetOrdersLambdaVersionBBjRwjJIiwFUTtCZdaFxqZXLXaNKkG9fLn5HqjbDyDU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetOrdersLambdaFunction"
+        },
+        "CodeSha256": "OJ6InySFFJuOupEz5Vu5bQZEjNxj9MKisDSbfQIKD7Y="
+      }
+    },
+    "LoginLambdaVersionbCSSbeTLX1PXEiJAhhif4XSvdEnetms9J1jUkbjwM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "LoginLambdaFunction"
         },
-        "CodeSha256": "LmXlOVeiHdPuOYNn61uXByF0DVZcmfn2n6PII2uj6n0="
+        "CodeSha256": "YevrGZDo3EVWXQjP34qXfpYCoF2W37vjdL4RIoQg5So="
       }
     },
-    "GetAddressLambdaVersionr73j7ChIEY6Hle4Zr7u4W26YoveTcyXeODvi0vWBH4Q": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetAddressLambdaFunction"
-        },
-        "CodeSha256": "LmXlOVeiHdPuOYNn61uXByF0DVZcmfn2n6PII2uj6n0="
-      }
-    },
-    "AddAddressLambdaVersionJlsDJ770P1mNMg4vao2cqzFkgx6ICukOuZpBr7cH03I": {
+    "AddAddressLambdaVersionbyWAFCLbl5o5OTGBx4HFplSb5QprxIv7cmqRoicNuA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AddAddressLambdaFunction"
         },
-        "CodeSha256": "zcI9HGejObbvAzPFu+Qx3guBxMzvTG7cZ5LLYNSaQ5g="
+        "CodeSha256": "YevrGZDo3EVWXQjP34qXfpYCoF2W37vjdL4RIoQg5So="
       }
     },
-    "ChangePasswordLambdaVersion5geGlR2ZQR6gWI29cfWWROObSqyO6G9dRCVvUnlj3k": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ChangePasswordLambdaFunction"
-        },
-        "CodeSha256": "4bEN1kfPRTR+NurzR4Tc+/r6OFq5m/Vv3xyKmO1zdA8="
-      }
-    },
-    "UpgradeToPartnerLambdaVersion409g9fUSWIYOJ1CSwV3SuTL5tyIak0brtGqFDc6IUyA": {
+    "UpgradeToPartnerLambdaVersionua9GjGLSXA2Guy0fEgbROKaezbU6KNnOsHrchCUek": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "UpgradeToPartnerLambdaFunction"
         },
-        "CodeSha256": "pQUOHRuWvFA+iOXsSQtWP/HwUCdzw67dtw7ye9ZdGE4="
+        "CodeSha256": "YevrGZDo3EVWXQjP34qXfpYCoF2W37vjdL4RIoQg5So="
+      }
+    },
+    "GetAddressLambdaVersionIA32gUkslO8dblpnWC53JM0yqrXlDmNNyk7LJjTM": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetAddressLambdaFunction"
+        },
+        "CodeSha256": "YevrGZDo3EVWXQjP34qXfpYCoF2W37vjdL4RIoQg5So="
+      }
+    },
+    "ChangePasswordLambdaVersionCutPf89KZp6DrdcoApzqbdy7NcF0F0uMeMCdqLTz4": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ChangePasswordLambdaFunction"
+        },
+        "CodeSha256": "YevrGZDo3EVWXQjP34qXfpYCoF2W37vjdL4RIoQg5So="
+      }
+    },
+    "CompleteOrderLambdaVersionoWbyIhEgaUM2GkPeBo00Yo1LCEm8l2dAM86bnytCKrs": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CompleteOrderLambdaFunction"
+        },
+        "CodeSha256": "OJ6InySFFJuOupEz5Vu5bQZEjNxj9MKisDSbfQIKD7Y="
       }
     },
     "ApiGatewayRestApi": {
@@ -931,6 +978,51 @@
         }
       }
     },
+    "ApiGatewayMethodProductsIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceProductsIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
     "ApiGatewayMethodOrdersCreateDashstripeDashcheckoutDashsessionOptions": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
@@ -1150,6 +1242,51 @@
         },
         "ResourceId": {
           "Ref": "ApiGatewayResourceOrdersPayComplete"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodOrdersOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceOrders"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -1662,7 +1799,53 @@
         "CompleteOrderLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1739611281260": {
+    "ApiGatewayMethodOrdersGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceOrders"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetOrdersLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "GetOrdersLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayDeployment1739692001921": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -1674,11 +1857,13 @@
         "ApiGatewayMethodUsersOptions",
         "ApiGatewayMethodUsersLoginOptions",
         "ApiGatewayMethodProductsOptions",
+        "ApiGatewayMethodProductsIdVarOptions",
         "ApiGatewayMethodOrdersCreateDashstripeDashcheckoutDashsessionOptions",
         "ApiGatewayMethodUsersAddressesOptions",
         "ApiGatewayMethodUsersPartnersOptions",
         "ApiGatewayMethodUsersChangeDashpasswordOptions",
         "ApiGatewayMethodOrdersPayCompleteOptions",
+        "ApiGatewayMethodOrdersOptions",
         "ApiGatewayMethodUsersPost",
         "ApiGatewayMethodUsersLoginPost",
         "ApiGatewayMethodProductsPost",
@@ -1689,7 +1874,8 @@
         "ApiGatewayMethodUsersAddressesGet",
         "ApiGatewayMethodUsersPartnersPost",
         "ApiGatewayMethodUsersChangeDashpasswordPut",
-        "ApiGatewayMethodOrdersPayCompletePost"
+        "ApiGatewayMethodOrdersPayCompletePost",
+        "ApiGatewayMethodOrdersGet"
       ]
     },
     "SignupLambdaPermissionApiGateway": {
@@ -2099,6 +2285,43 @@
         }
       }
     },
+    "GetOrdersLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetOrdersLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
     "UsersTable": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
@@ -2198,103 +2421,112 @@
         "Name": "sls-sweet-sensei-dev-ServerlessDeploymentBucketName"
       }
     },
-    "GetProductLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "GetProductLambdaVersionrEcOEXNAPgjcmG0iW5lKaBTX3Mm87yGTcMxg7IJ2E"
-      },
-      "Export": {
-        "Name": "sls-sweet-sensei-dev-GetProductLambdaFunctionQualifiedArn"
-      }
-    },
-    "AddProductLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "AddProductLambdaVersionpHahhPTDIoIjcBtcVwp30zSuURf0gkRnZfd6ycQPFDc"
-      },
-      "Export": {
-        "Name": "sls-sweet-sensei-dev-AddProductLambdaFunctionQualifiedArn"
-      }
-    },
     "GetProductsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetProductsLambdaVersion8exeX06UGvBMefdEniPdqKDg1EpBa793IuexdjNMENc"
+        "Ref": "GetProductsLambdaVersion9j7vAAo66QDBJgPOPsBUZczzCOF5xpJDHE65p4fPZQw"
       },
       "Export": {
         "Name": "sls-sweet-sensei-dev-GetProductsLambdaFunctionQualifiedArn"
       }
     },
+    "AddProductLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "AddProductLambdaVersion3WGHfuQgvtvIGsYlPs17whLb0tOAIPDy9EEwlVuns7Y"
+      },
+      "Export": {
+        "Name": "sls-sweet-sensei-dev-AddProductLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetProductLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetProductLambdaVersionbJGVQEdA5nppyfoRX48uaJyelkEHZRmDsszSi2J2BbY"
+      },
+      "Export": {
+        "Name": "sls-sweet-sensei-dev-GetProductLambdaFunctionQualifiedArn"
+      }
+    },
     "CreateCheckoutSessionLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "CreateCheckoutSessionLambdaVersion4PDc86IAGQh2qATRMJvu8VrHjirwJgFRl61dFb3HZc"
+        "Ref": "CreateCheckoutSessionLambdaVersionHifEiNaEShF5N2c4aDcc6ZYG2lHJI01LVzvpQ07PMCg"
       },
       "Export": {
         "Name": "sls-sweet-sensei-dev-CreateCheckoutSessionLambdaFunctionQualifiedArn"
       }
     },
-    "CompleteOrderLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "CompleteOrderLambdaVersionR4Kt6hhed0zsrFKYKEZP9lcaWgxxBqfZTpmcCW1hzQw"
-      },
-      "Export": {
-        "Name": "sls-sweet-sensei-dev-CompleteOrderLambdaFunctionQualifiedArn"
-      }
-    },
     "SignupLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SignupLambdaVersiongbFQWBqgXhNl6eBZCGZni3uFxfBiOVxibWkIfqs41sM"
+        "Ref": "SignupLambdaVersionTsZsf9Pa94v8PicmDGdMOVmvlbBCzFzCRIQvXTZdA"
       },
       "Export": {
         "Name": "sls-sweet-sensei-dev-SignupLambdaFunctionQualifiedArn"
       }
     },
+    "GetOrdersLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetOrdersLambdaVersionBBjRwjJIiwFUTtCZdaFxqZXLXaNKkG9fLn5HqjbDyDU"
+      },
+      "Export": {
+        "Name": "sls-sweet-sensei-dev-GetOrdersLambdaFunctionQualifiedArn"
+      }
+    },
     "LoginLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "LoginLambdaVersionYNjKLUlYUCEzkR3RMQx6imx9oW58WCloWNuKI8Fs"
+        "Ref": "LoginLambdaVersionbCSSbeTLX1PXEiJAhhif4XSvdEnetms9J1jUkbjwM"
       },
       "Export": {
         "Name": "sls-sweet-sensei-dev-LoginLambdaFunctionQualifiedArn"
       }
     },
-    "GetAddressLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "GetAddressLambdaVersionr73j7ChIEY6Hle4Zr7u4W26YoveTcyXeODvi0vWBH4Q"
-      },
-      "Export": {
-        "Name": "sls-sweet-sensei-dev-GetAddressLambdaFunctionQualifiedArn"
-      }
-    },
     "AddAddressLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AddAddressLambdaVersionJlsDJ770P1mNMg4vao2cqzFkgx6ICukOuZpBr7cH03I"
+        "Ref": "AddAddressLambdaVersionbyWAFCLbl5o5OTGBx4HFplSb5QprxIv7cmqRoicNuA"
       },
       "Export": {
         "Name": "sls-sweet-sensei-dev-AddAddressLambdaFunctionQualifiedArn"
       }
     },
+    "UpgradeToPartnerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "UpgradeToPartnerLambdaVersionua9GjGLSXA2Guy0fEgbROKaezbU6KNnOsHrchCUek"
+      },
+      "Export": {
+        "Name": "sls-sweet-sensei-dev-UpgradeToPartnerLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetAddressLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetAddressLambdaVersionIA32gUkslO8dblpnWC53JM0yqrXlDmNNyk7LJjTM"
+      },
+      "Export": {
+        "Name": "sls-sweet-sensei-dev-GetAddressLambdaFunctionQualifiedArn"
+      }
+    },
     "ChangePasswordLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ChangePasswordLambdaVersion5geGlR2ZQR6gWI29cfWWROObSqyO6G9dRCVvUnlj3k"
+        "Ref": "ChangePasswordLambdaVersionCutPf89KZp6DrdcoApzqbdy7NcF0F0uMeMCdqLTz4"
       },
       "Export": {
         "Name": "sls-sweet-sensei-dev-ChangePasswordLambdaFunctionQualifiedArn"
       }
     },
-    "UpgradeToPartnerLambdaFunctionQualifiedArn": {
+    "CompleteOrderLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "UpgradeToPartnerLambdaVersion409g9fUSWIYOJ1CSwV3SuTL5tyIak0brtGqFDc6IUyA"
+        "Ref": "CompleteOrderLambdaVersionoWbyIhEgaUM2GkPeBo00Yo1LCEm8l2dAM86bnytCKrs"
       },
       "Export": {
-        "Name": "sls-sweet-sensei-dev-UpgradeToPartnerLambdaFunctionQualifiedArn"
+        "Name": "sls-sweet-sensei-dev-CompleteOrderLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
